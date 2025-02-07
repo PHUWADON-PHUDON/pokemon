@@ -1,0 +1,83 @@
+.App{
+  padding: 20px;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.App .container{
+  width: 1250px;
+  box-shadow: 0 0 8px #00000067;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+}
+
+.App .container .boxleft{
+  padding: 20px;
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App .container .boxleft > h1{
+  font-size: 50px;
+}
+
+.App .container .boxleft > p{
+  margin-top: 20px;
+}
+
+.App .container .boxleft > p > i{
+  font-size: 30px;
+  color: red;
+  cursor: pointer;
+}
+
+.App .container .boxleft > img{
+  margin-top: 100px;
+  width: 250px;
+  height: 250px;
+}
+
+.App .container .boxleft .btnprevandnext{
+  margin-top: 30px;
+  display: flex;
+  column-gap: 100px;
+}
+
+.App .container .boxleft .btnprevandnext > i{
+  font-size: 30px;
+  cursor: pointer;
+  padding: 0.2rem 1.0rem;
+  border-radius: 4px;
+  transition: all .2s;
+}
+.App .container .boxleft .btnprevandnext > i:hover{
+  background-color: #00000023;
+}
+
+.App .container .boxright{
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App .container .boxright > p{
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.App .container .boxright .favcontainer{
+  margin-top: 20px;
+  width: 100%;
+  height: 500px;
+  overflow-y: scroll;
+  /* display: flex;
+  gap: 15px;
+  flex-wrap: wrap; */
+}
