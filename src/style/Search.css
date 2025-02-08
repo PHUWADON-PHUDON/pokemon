@@ -1,4 +1,5 @@
 .Search{
+    position: relative;
     margin-bottom: 10px;
 }
 
@@ -14,3 +15,29 @@
 .Search input:focus{
     outline: none;
 }
+
+.Search .listsearch{
+    z-index: 10;
+    margin-top: 5px;
+    width: 100%;
+    box-shadow: 0 0 8px #00000067;
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: scroll;
+    position: absolute;
+}
+
+.Search .listsearch > p{
+    padding: 4px 10px;
+    background-color: #fff;
+}
+
+.Search .listsearch > p:hover{
+    background-color: #e5e3e3;
+}
+
+@media screen and (max-width: 510px) {
+    .Search input{
+        width: 100%;
+    }
+  }

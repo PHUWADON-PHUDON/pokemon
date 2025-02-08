@@ -11,17 +11,21 @@ function App() {
   const [poke,setpoke] = useState(null);
   const [pokefav,setpokefav] = useState([]);
   const [countid,setcountid] = useState(1);
+  const [datasearch,setdatasearch] = useState([]);
+  const [aftersearch,setaftersearch] = useState([]);
 
   //! load data
   
   useEffect(() => {
     const abortcontroller = new AbortController();
+    const abortcontroller2 = new AbortController();
+    const abortcontroller3 = new AbortController();
 
     const loaddata = async () => {
       try{
         let id = parseInt(Cookies.get("id"));
         if (!id) {
-          Cookies.set("id",1);
+          Cookies.set("id",1,{expires:30});
           id = 1;
         }
 
@@ -34,14 +38,6 @@ function App() {
       catch{}
     }
 
-    loaddata();
-
-    return () => abortcontroller.abort();
-  },[]);
-
-  useEffect(() => {
-    const abortcontroller = new AbortController();
-
     const loadFav = async () => {
       const favid = Cookies.get("favid") ? JSON.parse(Cookies.get("favid")):[];
       
@@ -50,7 +46,7 @@ function App() {
 
         try{
           for (let e of favid) {
-            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${e}`,{signal:abortcontroller.signal});
+            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${e}`,{signal:abortcontroller2.signal});
             if (response.status == 200) {
               arr.push(response.data);
             }
@@ -62,9 +58,25 @@ function App() {
       }
     }
 
-    loadFav();
+    const loaddatasearch = async () => {
+      try{
+        const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`,{signal:abortcontroller3.signal});
+        if (response.status == 200) {
+          setdatasearch(response.data.results);
+        }
+      }
+      catch{}
+    }
 
-    return () => abortcontroller.abort();
+    loaddata();
+    loadFav();
+    loaddatasearch();
+
+    return () => {
+      abortcontroller.abort();
+      abortcontroller2.abort();
+      abortcontroller3.abort();
+    };
   },[]);
 
   //!
@@ -81,7 +93,7 @@ function App() {
       if (response.status == 200) {
         setwait(true);
         setpoke(response.data);
-        Cookies.set("id",parseInt(id - 1));
+        Cookies.set("id",parseInt(id - 1),{expires:30});
       }
     }
     catch{
@@ -101,7 +113,7 @@ function App() {
       if (response.status == 200) {
         setwait(true);
         setpoke(response.data);
-        Cookies.set("id",parseInt(id + 1));
+        Cookies.set("id",parseInt(id + 1),{expires:30});
       }
     }
     catch{
@@ -124,7 +136,7 @@ function App() {
 
       if (!checkid) {
         arrfavid.push(id);
-        Cookies.set("favid",JSON.stringify(arrfavid));
+        Cookies.set("favid",JSON.stringify(arrfavid),{expires:30});
         setpokefav(prev => [...pokefav,poke]);
       }
       else {
@@ -133,7 +145,7 @@ function App() {
             return(e);
           }
         });
-        Cookies.set("favid",JSON.stringify(newarrfavid));
+        Cookies.set("favid",JSON.stringify(newarrfavid),{expires:30});
 
         const newarrpokefav = pokefav.filter(e => {
           if (e.id != id) {
@@ -146,7 +158,7 @@ function App() {
     }
     else {
       favid = [id];
-      Cookies.set("favid",JSON.stringify(favid));
+      Cookies.set("favid",JSON.stringify(favid),{expires:30});
       setpokefav(prev => [...pokefav,poke]);
     }
   }
@@ -160,7 +172,7 @@ function App() {
         return(e);
       }
     });
-    Cookies.set("favid",JSON.stringify(newarrfavid));
+    Cookies.set("favid",JSON.stringify(newarrfavid),{expires:30});
 
     const newarrpokefav = pokefav.filter(e => {
       if (e.id != id) {
@@ -173,11 +185,48 @@ function App() {
 
   //!
 
+  //! search
+
+  const search = (text) => {
+    if (text != "") {
+      let arrsearch = datasearch.filter(e => {
+        if (e.name.includes(text)) {
+          return(e);
+        }
+      });
+  
+      setaftersearch(prev => arrsearch);
+    }
+    else {
+      setaftersearch(prev => []);
+    }
+  }
+
+  const selectSearch = async (value) => {
+    const abortcontroller = new AbortController();
+
+    try{
+      setwait(false);
+      const response = await axios.get(value.url,{signal:abortcontroller.signal});
+      if (response.status == 200) {
+        Cookies.set("id",response.data.id,{expires:30});
+        setpoke(prev => response.data);
+        setaftersearch(prev => []);
+        setwait(true);
+      }
+    }
+    catch{}
+
+    return () => abortcontroller.abort();
+  }
+
+  //!
+
   return(
     <div className="App">
       {wait ? 
         <>
-          <Search/>
+          <Search search={search} aftersearch={aftersearch} selectSearch={selectSearch}/>
           <div className="container">
             <div className="boxleft">
               <h1>{poke.name}</h1>
@@ -188,7 +237,7 @@ function App() {
                   <i onClick={() => favourite(poke.id)} className="fa-regular fa-heart"></i>
                 }
               </p>
-              <img src={poke.sprites.other.dream_world.front_default} alt="" />
+              <img src={poke.sprites.other["official-artwork"].front_default} alt="" />
               <div className="btnprevandnext">
                 <i onClick={() => prev()} className="fa-solid fa-chevron-left"></i>
                 <i onClick={() => next()} className="fa-solid fa-chevron-right"></i>
@@ -198,7 +247,7 @@ function App() {
               <p>Favourite Pokemon</p>
               <div className="favcontainer">
                 {pokefav.map((e,i) => (
-                  <Favitem key={i} id={e.id} name={e.name} img={e.sprites.other.dream_world.front_default} unfavourite={unfavourite}/>
+                  <Favitem key={i} id={e.id} name={e.name} img={e.sprites.other["official-artwork"].front_default} unfavourite={unfavourite}/>
                 ))}
               </div>
             </div>
