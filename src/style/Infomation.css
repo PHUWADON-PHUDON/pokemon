@@ -1,0 +1,48 @@
+.Infomation{
+    position: relative;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    background-color: #fff;
+    padding: 55px 20px 20px 20px;
+    transition: all .2s linear;
+    overflow-y: scroll;
+}
+
+.Infomation::-webkit-scrollbar{
+    display: none;
+}
+
+.Infomation > i{
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.Infomation > p{
+    margin-top: 10px;
+}
+
+.Infomation > p > span{
+    color: #5c5a5a;
+    margin-left: 10px;
+}
+
+.Infomation > h3{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.Infomation .boxstats{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.Infomation .boxstats > div > p{
+    margin-top: 10px;
+    text-align: center;
+}

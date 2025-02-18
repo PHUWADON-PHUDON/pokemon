@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import Preload from "./components/Preload";
 import Favitem from "./components/Favitem";
 import Search from "./components/Search";
+import Infomation from "./components/Infomation";
 
 function App() {
   const [wait,setwait] = useState(false);
@@ -13,6 +14,7 @@ function App() {
   const [countid,setcountid] = useState(1);
   const [datasearch,setdatasearch] = useState([]);
   const [aftersearch,setaftersearch] = useState([]);
+  const [isinfomation,setisinfomation] = useState(false);
 
   //! load data
   
@@ -222,6 +224,14 @@ function App() {
 
   //!
 
+  //!infomation
+
+  const infomation = () => {
+    setisinfomation(!isinfomation);
+  }
+
+  //!
+
   return(
     <div className="App">
       {wait ? 
@@ -240,6 +250,7 @@ function App() {
               <img src={poke.sprites.other["official-artwork"].front_default} alt="" />
               <div className="btnprevandnext">
                 <i onClick={() => prev()} className="fa-solid fa-chevron-left"></i>
+                <i onClick={() => infomation()} className="fa-solid fa-circle-info"></i>
                 <i onClick={() => next()} className="fa-solid fa-chevron-right"></i>
               </div>
             </div>
@@ -251,6 +262,7 @@ function App() {
                 ))}
               </div>
             </div>
+            <Infomation infomation={infomation} isinfomation={isinfomation} poke={poke}/>
           </div>
         </>
         :<Preload/>}
