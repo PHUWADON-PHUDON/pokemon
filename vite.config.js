@@ -24,7 +24,7 @@ export default defineConfig({
           },
           {
             // จับไฟล์รูปที่มาจาก GitHub raw (pokeapi sprites)
-            urlPattern: /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/sprites\/.*\.(png|jpg|jpeg|gif|webp)$/,
+            urlPattern: /^https:\/\/raw\.githubusercontent\.com\/PokeAPI\/sprites\/master\/sprites\/pokemon\/other\/official-artwork\/\d+\.png$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'pokeapi-images',

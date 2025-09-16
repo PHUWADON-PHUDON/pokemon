@@ -113,6 +113,7 @@ function App() {
       let id = parseInt(Cookies.get("id"));
       const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id + 1}`,{signal:abortcontroller.signal});
       if (response.status == 200) {
+        console.log(response.data)
         setwait(true);
         setpoke(response.data);
         Cookies.set("id",parseInt(id + 1),{expires:30});
